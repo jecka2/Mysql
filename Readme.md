@@ -6,11 +6,15 @@
 Базу развернуть на мастере и настроить так, чтобы реплицировались таблицы:
 
 
-| bookmaker          |
-| competition        |
- market              |
+| bookmaker |
+<br>
+| competition   |
+ <br>
+| market |
+<br>
 | odds               |
-| outcome
+<br>
+| outcome             |
 
 Настроить GTID репликацию
 
