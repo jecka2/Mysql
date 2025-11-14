@@ -1,0 +1,60 @@
+---
+- name: Install SQL Server
+  apt:
+   name:
+    - mysql-server
+    - mysql-client
+    - python3-mysqldb
+
+- name: Ensure MySQL service is running and enabled
+  systemd:
+    name: mysql
+    state: started
+    enabled: yes
+  when: ansible_hostname == "secondary"
+
+- name: copy replica config file
+  ansible.builtin.template:
+    src: mysql.cnf.j2
+    dest: /etc/mysql/mysql.conf.d/mysqld.cnf
+  when: ansible_hostname == "secondary"
+
+- name: restart mysql
+  systemd:
+    name: mysql
+    state: restarted
+  when: ansible_hostname == "secondary"
+
+
+- name: configure replica
+  mysql_replication:
+    login_password: '{{ mysql_root_password }}'
+    mode: changeprimary
+    master_host: 192.168.1.120
+    master_port: 3306
+    master_user: replica
+    master_password: '{{ mysql_replica_password }}'
+    master_auto_position: yes
+  when: ansible_hostname == "secondary"
+
+
+- name: start replica
+  mysql_replication:
+    login_password: '{{ mysql_root_password }}'
+    mode: startreplica
+  when: ansible_hostname == "secondary"
+
+
+- name: copy dump to temporary file
+  copy:
+    src: bet.dmp
+    dest: /tmp/
+  when: ansible_hostname == "main"
+
+- name: import db
+  mysql_db:
+    state: import
+    name: bet
+    login_password: '{{ mysql_root_password }}'
+    target: /tmp/bet.dmp   
+  when: ansible_hostname == "main"

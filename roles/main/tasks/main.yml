@@ -1,0 +1,28 @@
+---
+- name: Install SQL Server
+  apt:
+   name:
+    - mysql-server
+    - mysql-client
+    - python3-mysqldb
+
+- name: Ensure MySQL service is running and enabled
+  systemd:
+    name: mysql
+    state: started
+    enabled: yes
+
+- name: copy replica config file
+  ansible.builtin.template:
+    src: mysql.cnf.j2
+    dest: /etc/mysql/mysql.conf.d/mysqld.cnf
+  notify: restart mysql
+
+- name: create replica user
+  mysql_user:
+    login_password: '{{ mysql_root_password }}'
+    name: replica
+    host: '%'
+    password: '{{ mysql_replica_password }}'
+    priv: '*.*:REPLICATION SLAVE'
+    state: present

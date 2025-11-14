@@ -1,0 +1,21 @@
+- name: Развертывние виртуальных машин
+  hosts: Proxmox
+  vars_files:
+   - group_vars/host_vars.yml
+   - group_vars/secrets.yml
+  become: true
+  roles:
+   - vms
+
+- name: Установка и настройка мастер  master
+  hosts: main
+  become: true
+  roles:
+   - main
+
+- name: Установка и настройка мастер secondary
+  hosts: secondary, main
+  become: true
+  roles:
+   - secondary
+
