@@ -44,20 +44,20 @@ ansible-playbook main.yml --ask-vault-pass
 
 Проверяем  настроки и базы данных на main сервере
 
-![](screenshots\Main.png)
+![fi](screenshots\Main.png)
 
 
 Проверяем, что на сервере secondary включилась репликация и дамп базы импортированный на main  так же доступен и тут
 
-![](screenshots\Slave.png)
+![fi](screenshots\Slave.png)
 
-![](screenshots\Database_on_slave.png)
+![fi](screenshots\Database_on_slave.png)
 
 
 После этого на main сервере добавим информацию в таблицу bookmaker 
 
-![](screenshots\add_1xbet_to_master.png)
+![fi](screenshots\add_1xbet_to_master.png)
 
 Проверим что эти данные так же реплицировались на secondary
 
-![](screenshots\1xbet_on_secondary.png)
+![fi](screenshots\1xbet_on_secondary.png)
